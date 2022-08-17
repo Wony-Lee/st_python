@@ -1,22 +1,29 @@
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+import aiohttp
+import asyncio
+import os
 
-html_doc = """<html><head><title>The Dormouse's story</title></head>
-<body>
-<p class="title"><b>The Dormouse's story</b></p>
 
-<p class="story">Once upon a time there were three little sisters; and their names were
-<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
-<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
-<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
-and they lived at the bottom of a well.</p>
+async def fetch(session, url):
+    ClientId = os.environ.get("X-Naver-Client-Id")
+    ClientKey = os.environ.get("X-Naver-Client-Secret")
+    headers = {"X-Naver-Client-Id": ClientId, "X-Naver-Client-Secret": ClientKey}
+    async with session.get(url, headers=headers) as response:
+        result = await response.json()
+        items = result["items"]
+        images = [item["link"] for item in items]
+        print(images)
 
-<p class="story">...</p>
-"""
 
-soup = BeautifulSoup(html_doc, "html.parser")
-print(soup.prettify())
-print(soup.title)
+async def main():
+    BASE_URL = "https://openapi.naver.com/v1/search/image"
+    keyword = "cat"
+    urls = [f"{BASE_URL}?query={keyword}&display=20&start={i}" for i in range(1, 10)]
+    async with aiohttp.ClientSession() as session:
+        await asyncio.gather(*[fetch(session, url) for url in urls])
 
-print(soup.p)
-print(soup.find("p", "story"))
-print(soup.find("p", "story").text)
+
+if __name__ == "__main__":
+    load_dotenv()
+    asyncio.run(main())
