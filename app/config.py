@@ -21,6 +21,11 @@ def get_sercet(
         raise EnvironmentError(f"Set the {key} enviroment variable.")
 
 
+MONGO_DB_NAME = get_sercet("MONGO_DB_NAME")
+MONGO_URL = get_sercet("MONGO_URL")
+NAVER_API_ID = get_sercet("X-Naver-Client-Id")
+NAVER_API_SECRET = get_sercet("X-Naver-Client-Secret")
+
 if __name__ == "__main__":
     world = get_sercet("Hello")
     print(world)
