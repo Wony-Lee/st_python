@@ -1,5 +1,5 @@
 import json
-from patchlib import Path
+from pathlib import Path
 from typing import Optional
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -14,7 +14,7 @@ def get_secret(
         secrets = json.loads(f.read())
     try:
         return secrets[key]
-    except keyError:
+    except KeyError:
         if default_value:
             return default_value
         raise EnvironmentError(f"Set the {key} enviroment variable.")

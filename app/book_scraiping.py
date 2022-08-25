@@ -1,13 +1,13 @@
 import asyncio
 import aiohttp
-from config import get_sercet
+from config import get_secret
 
 
 class NaverBookScraper:
  
     NAVER_API_BOOK = "https://openapi.naver.com/v1/search/book"
-    NAVER_API_ID = get_sercet('X-Naver-Client-Id')
-    NAVER_API_SECRET = get_sercet("X-Naver-Client-Secret")
+    NAVER_API_ID = get_secret('X-Naver-Client-Id')
+    NAVER_API_SECRET = get_secret("X-Naver-Client-Secret")
 
     @staticmethod
     async def fetch(seesion, url, headers):
@@ -37,9 +37,8 @@ class NaverBookScraper:
                 if data is not None:
                     for book in data:
                         result.append(book)
-
             return result
-    
+
     def run(self, keyword, total_page):
         return asyncio.run(self.search(keyword, total_page))
 
